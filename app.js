@@ -59,7 +59,7 @@ function boot() {
 
 function initMap() {
   state.map = L.map("map", { zoomControl: true }).setView([6.5244, 3.3792], 13);
-  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19, attribution: "&copy; OpenStreetMap contributors" }).addTo(state.map);
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19, attribution: "(c) OpenStreetMap contributors" }).addTo(state.map);
 }
 
 function startGeolocation() {
@@ -102,9 +102,7 @@ function startDemo() {
   state.demoTimer = setInterval(() => {
     DEMO.forEach(d => {
       const p = state.people[d.uid]; if (!p) return;
-      p.lat += (Math.random() - 0.5) * 0.0009;
-      p.lng += (Math.random() - 0.5) * 0.0009;
-      p.ts = Date.now();
+      p.lat += (Math.random() - 0.5) * 0.0009; p.lng += (Math.random() - 0.5) * 0.0009; p.ts = Date.now();
       upsertPerson(p);
     });
   }, 3000);
@@ -114,8 +112,7 @@ function stopDemo() { if (state.demoTimer) { clearInterval(state.demoTimer); sta
 async function loadFirebaseFromStorage() {
   const raw = localStorage.getItem(LS.fb);
   if (!raw) { state.mode = "demo"; return; }
-  try { await connectFirebase(JSON.parse(raw)); }
-  catch (e) { console.warn("Firebase config invalid, demo mode", e); state.mode = "demo"; }
+  try { await connectFirebase(JSON.parse(raw)); } catch (e) { console.warn("Firebase config invalid, demo mode", e); state.mode = "demo"; }
 }
 async function connectFirebase(cfg) {
   const appMod = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js");
@@ -124,10 +121,7 @@ async function connectFirebase(cfg) {
   const db = dbMod.getDatabase(app);
   state.fb = { app, db, mod: dbMod };
   state.mode = "live";
-  stopDemo();
-  subscribeGroup();
-  publishMyPosition();
-  updateModeBadge();
+  stopDemo(); subscribeGroup(); publishMyPosition(); updateModeBadge();
 }
 function groupPath() { return `groups/${state.group}/members`; }
 function subscribeGroup() {
@@ -136,8 +130,7 @@ function subscribeGroup() {
   Object.keys(state.people).forEach(uid => { if (uid !== state.uid) removePerson(uid); });
   const r = mod.ref(db, groupPath());
   mod.onValue(r, (snap) => {
-    const val = snap.val() || {};
-    const seen = new Set();
+    const val = snap.val() || {}; const seen = new Set();
     Object.entries(val).forEach(([uid, m]) => {
       if (!m || m.lat == null) return;
       seen.add(uid);
@@ -153,7 +146,11 @@ function publishMyPosition() {
   mod.set(r, { name: state.name, lat: state.myPos.lat, lng: state.myPos.lng, ts: Date.now() });
   mod.onDisconnect(r).remove();
 }
-function stopPublishing() { if (state.mode !== "live" || !state.fb) return; const { db, mod } = state.fb; mod.remove(mod.ref(db, `${groupPath()}/${state.uid}`)); }
+function stopPublishing() {
+  if (state.mode !== "live" || !state.fb) return;
+  const { db, mod } = state.fb;
+  mod.remove(mod.ref(db, `${groupPath()}/${state.uid}`));
+}
 
 function wireUi() {
   $("settingsBtn").addEventListener("click", () => $("settingsModal").classList.remove("hidden"));
@@ -166,8 +163,7 @@ function wireUi() {
   $("saveFirebase").addEventListener("click", async () => {
     const raw = $("firebaseConfig").value.trim();
     if (!raw) { alert("Paste your Firebase config, or tap 'Use demo mode'."); return; }
-    let cfg;
-    try { cfg = JSON.parse(raw); } catch { alert("That doesn't look like valid JSON. Copy the config object exactly."); return; }
+    let cfg; try { cfg = JSON.parse(raw); } catch { alert("That doesn't look like valid JSON. Copy the config object exactly."); return; }
     if (!cfg.databaseURL) { alert("Config needs a databaseURL (Realtime Database). Enable Realtime Database in Firebase."); return; }
     localStorage.setItem(LS.fb, JSON.stringify(cfg));
     try { await connectFirebase(cfg); $("settingsModal").classList.add("hidden"); alert("Connected! You're now sharing live with your group."); }
@@ -201,8 +197,7 @@ function render() {
   ss.textContent = state.sharing ? "\u25cf Sharing on" : "\u25cf Sharing paused";
   ss.className = "share-state " + (state.sharing ? "on" : "off");
   $("toggleShareBtn").textContent = state.sharing ? "Pause sharing" : "Resume sharing";
-  const list = $("peopleList");
-  const entries = Object.values(state.people);
+  const list = $("peopleList"); const entries = Object.values(state.people);
   $("peopleCount").textContent = entries.length + (entries.length === 1 ? " person" : " people");
   list.innerHTML = "";
   entries.sort((a, b) => (b.me ? 1 : 0) - (a.me ? 1 : 0)).forEach(p => {
