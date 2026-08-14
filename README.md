@@ -20,10 +20,10 @@ Runs in **demo mode** out of the box (your real GPS + a few simulated contacts) 
 
 ## Enable real cross-device sharing (Firebase)
 
-1. Create a free project at console.firebase.google.com.
-2. Add a **Realtime Database**.
-3. Copy the `firebaseConfig` object from Project settings.
-4. In the app: **Settings → paste config → Save & connect.**
+1. Create a free project at https://console.firebase.google.com/
+2. Add a **Realtime Database** (test mode, or use the rules below).
+3. In Project settings → your web app, copy the `firebaseConfig` object.
+4. In the app: **⚙️ Settings → paste the config → Save & connect.**
 
 Suggested Realtime Database rules:
 
@@ -41,7 +41,7 @@ Suggested Realtime Database rules:
 python3 -m http.server 8080
 ```
 
-Geolocation requires HTTPS or localhost — GitHub Pages provides HTTPS automatically.
+Geolocation requires HTTPS or `localhost` — GitHub Pages provides HTTPS automatically.
 
 ## Privacy & ethics
 
