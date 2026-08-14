@@ -45,30 +45,23 @@
       <div class="group-pill" id="groupPill" title="Current group code">-</div>
       <button id="settingsBtn" class="icon-btn" title="Settings">⚙️</button>
     </header>
-
     <div id="map"></div>
-
     <div class="statusbar">
       <span id="modeBadge" class="badge demo">Demo mode</span>
       <span id="shareState" class="share-state on">● Sharing on</span>
       <span id="peopleCount" class="people-count">0 people</span>
     </div>
-
     <div class="dock">
       <button id="toggleShareBtn" class="btn danger-outline">Pause sharing</button>
       <button id="recenterBtn" class="btn ghost">Recenter</button>
       <button id="groupBtn" class="btn primary">Group</button>
     </div>
-
     <ul id="peopleList" class="people-list"></ul>
   </section>
 
   <div id="settingsModal" class="modal hidden">
     <div class="modal-card">
-      <div class="modal-head">
-        <h2>Settings</h2>
-        <button id="closeSettings" class="icon-btn">✕</button>
-      </div>
+      <div class="modal-head"><h2>Settings</h2><button id="closeSettings" class="icon-btn">✕</button></div>
       <h3>Live cross-device sharing</h3>
       <p class="muted">
         Paste your free Firebase project's <code>config</code> object below to enable real
@@ -89,10 +82,7 @@
 
   <div id="groupModal" class="modal hidden">
     <div class="modal-card">
-      <div class="modal-head">
-        <h2>Your group</h2>
-        <button id="closeGroup" class="icon-btn">✕</button>
-      </div>
+      <div class="modal-head"><h2>Your group</h2><button id="closeGroup" class="icon-btn">✕</button></div>
       <p class="muted">Share this code with people you trust. Anyone with the code can join and will be visible to the whole group.</p>
       <div class="code-row">
         <input type="text" id="groupCode" placeholder="Group code" maxlength="12" autocomplete="off" />
@@ -105,7 +95,6 @@
     </div>
   </div>
 </div>
-
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script type="module" src="app.js"></script>
 </body>

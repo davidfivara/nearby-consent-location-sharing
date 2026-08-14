@@ -1,8 +1,4 @@
-:root{
-  --bg:#0b1220;--panel:#121a2b;--panel2:#0f1626;--line:#22304a;
-  --text:#e7edf7;--muted:#8ea0bd;--brand:#3b82f6;--brand2:#2563eb;
-  --danger:#ef4444;--ok:#22c55e;--warn:#f59e0b;--radius:14px;
-}
+:root{--bg:#0b1220;--panel:#121a2b;--panel2:#0f1626;--line:#22304a;--text:#e7edf7;--muted:#8ea0bd;--brand:#3b82f6;--brand2:#2563eb;--danger:#ef4444;--ok:#22c55e;--warn:#f59e0b;--radius:14px}
 *{box-sizing:border-box}
 html,body{height:100%;margin:0}
 body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
@@ -14,7 +10,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Ar
 .logo{font-size:24px;font-weight:700;margin-bottom:6px}
 .gate-card h1{font-size:22px;line-height:1.25;margin:4px 0 10px}
 .lede{color:var(--muted);font-size:14.5px;line-height:1.55;margin:0 0 16px}
-.consent-list{list-style:disc;padding-left:18px;margin:0 0 18px;display:grid;gap:9px}
+.consent-list{list-style:none;padding:0;margin:0 0 18px;display:grid;gap:9px}
 .consent-list li{font-size:13.5px;color:#cdd8ea;line-height:1.4}
 .checkbox{display:flex;gap:10px;align-items:flex-start;font-size:13px;color:#cdd8ea;background:var(--panel2);border:1px solid var(--line);padding:12px;border-radius:12px;margin-bottom:12px;cursor:pointer}
 .checkbox input{margin-top:2px;width:18px;height:18px;accent-color:var(--brand)}
@@ -29,7 +25,7 @@ input[type=text]:focus,textarea:focus{border-color:var(--brand)}
 .btn.primary:hover{background:var(--brand2)}
 .btn.ghost{background:transparent;color:var(--text);border:1px solid var(--line)}
 .btn.danger-outline{background:transparent;color:#ffb4b4;border:1px solid #7f2a2a}
-.icon-btn{background:transparent;border:none;color:var(--text);font-size:18px;cursor:pointer;padding:6px;width:auto}
+.icon-btn{background:transparent;border:none;color:var(--text);font-size:18px;cursor:pointer;padding:6px}
 .topbar{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--panel);border-bottom:1px solid var(--line);z-index:500}
 .brand{font-weight:700}
 .group-pill{margin-left:auto;background:var(--panel2);border:1px solid var(--line);padding:6px 12px;border-radius:999px;font-size:13px;letter-spacing:.5px;color:var(--muted)}
@@ -44,7 +40,7 @@ input[type=text]:focus,textarea:focus{border-color:var(--brand)}
 .people-count{margin-left:auto;color:var(--muted)}
 .dock{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;padding:12px 14px;background:var(--panel);border-top:1px solid var(--line)}
 .people-list{list-style:none;margin:0;padding:0 14px 14px;background:var(--panel);max-height:26vh;overflow:auto}
-.people-list li{display:flex;align-items:center;gap:10px;padding:10px 4px;border-bottom:1px solid var(--line);font-size:14px;cursor:pointer}
+.people-list li{display:flex;align-items:center;gap:10px;padding:10px 4px;border-bottom:1px solid var(--line);font-size:14px}
 .dot{width:12px;height:12px;border-radius:50%;flex:none}
 .person-name{font-weight:600}
 .person-meta{margin-left:auto;color:var(--muted);font-size:12px}
