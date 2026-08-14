@@ -1,4 +1,4 @@
-// Nearby — consent-based live location sharing
+// Nearby - consent-based live location sharing
 // Front-end only. Real GPS via browser Geolocation API.
 // Live cross-device sync via Firebase Realtime Database (optional, user-provided config).
 // Falls back to local demo mode when no Firebase config is present.
@@ -34,7 +34,6 @@ function cryptoId() {
 function $(id) { return document.getElementById(id); }
 function esc(s) { return String(s).replace(/[<>&"]/g, c => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;" }[c])); }
 
-/* Consent gate */
 const consentCheck = $("consentCheck");
 const displayName = $("displayName");
 const enterBtn = $("enterBtn");
@@ -61,7 +60,6 @@ if (localStorage.getItem(LS.consent) === "1" && state.name) {
   window.addEventListener("DOMContentLoaded", boot);
 }
 
-/* Boot */
 function boot() {
   initMap();
   loadFirebaseFromStorage();
@@ -83,7 +81,6 @@ function initMap() {
   }).addTo(state.map);
 }
 
-/* Geolocation (real) */
 function startGeolocation() {
   if (!("geolocation" in navigator)) { console.warn("Geolocation unavailable"); return; }
   state.watchId = navigator.geolocation.watchPosition(
@@ -106,7 +103,6 @@ function centerOnMeOnce() {
   state.map.setView([state.myPos.lat, state.myPos.lng], 15);
 }
 
-/* People + markers */
 function upsertPerson(p) {
   state.people[p.uid] = { ...state.people[p.uid], ...p };
   drawMarker(p.uid);
@@ -134,7 +130,6 @@ function drawMarker(uid) {
   }
 }
 
-/* Demo mode */
 const DEMO = [
   { uid: "demo_sam", name: "Sam", lat: 6.5290, lng: 3.3760 },
   { uid: "demo_amara", name: "Amara", lat: 6.5200, lng: 3.3850 },
@@ -154,17 +149,11 @@ function startDemo() {
 }
 function stopDemo() { if (state.demoTimer) { clearInterval(state.demoTimer); state.demoTimer = null; } DEMO.forEach(d => removePerson(d.uid)); }
 
-/* Firebase (live) */
 async function loadFirebaseFromStorage() {
   const raw = localStorage.getItem(LS.fb);
   if (!raw) { state.mode = "demo"; return; }
-  try {
-    const cfg = JSON.parse(raw);
-    await connectFirebase(cfg);
-  } catch (e) {
-    console.warn("Firebase config invalid, staying in demo mode", e);
-    state.mode = "demo";
-  }
+  try { const cfg = JSON.parse(raw); await connectFirebase(cfg); }
+  catch (e) { console.warn("Firebase config invalid, staying in demo mode", e); state.mode = "demo"; }
 }
 
 async function connectFirebase(cfg) {
@@ -215,22 +204,17 @@ function stopPublishing() {
   mod.remove(mod.ref(db, `${groupPath()}/${state.uid}`));
 }
 
-/* UI wiring */
 function wireUi() {
   $("settingsBtn").addEventListener("click", () => $("settingsModal").classList.remove("hidden"));
   $("closeSettings").addEventListener("click", () => $("settingsModal").classList.add("hidden"));
   $("groupBtn").addEventListener("click", () => $("groupModal").classList.remove("hidden"));
   $("closeGroup").addEventListener("click", () => $("groupModal").classList.add("hidden"));
-
   $("recenterBtn").addEventListener("click", () => { if (state.myPos) state.map.setView([state.myPos.lat, state.myPos.lng], 15); });
-
   $("toggleShareBtn").addEventListener("click", () => {
     state.sharing = !state.sharing;
-    if (state.sharing) { publishMyPosition(); }
-    else { stopPublishing(); }
+    if (state.sharing) publishMyPosition(); else stopPublishing();
     render();
   });
-
   $("firebaseConfig").value = localStorage.getItem(LS.fb) || "";
   $("saveFirebase").addEventListener("click", async () => {
     const raw = $("firebaseConfig").value.trim();
@@ -239,19 +223,10 @@ function wireUi() {
     try { cfg = JSON.parse(raw); } catch { alert("That doesn't look like valid JSON. Copy the config object exactly."); return; }
     if (!cfg.databaseURL) { alert("Config needs a databaseURL (Realtime Database). Enable Realtime Database in Firebase."); return; }
     localStorage.setItem(LS.fb, JSON.stringify(cfg));
-    try {
-      await connectFirebase(cfg);
-      $("settingsModal").classList.add("hidden");
-      alert("Connected! You're now sharing live with your group.");
-    } catch (e) {
-      alert("Could not connect: " + e.message);
-    }
+    try { await connectFirebase(cfg); $("settingsModal").classList.add("hidden"); alert("Connected! You're now sharing live with your group."); }
+    catch (e) { alert("Could not connect: " + e.message); }
   });
-  $("clearFirebase").addEventListener("click", () => {
-    localStorage.removeItem(LS.fb);
-    location.reload();
-  });
-
+  $("clearFirebase").addEventListener("click", () => { localStorage.removeItem(LS.fb); location.reload(); });
   $("genCode").addEventListener("click", () => { $("groupCode").value = randomCode(); });
   $("copyCode").addEventListener("click", async () => {
     try { await navigator.clipboard.writeText($("groupCode").value); $("copyCode").textContent = "Copied"; setTimeout(() => $("copyCode").textContent = "Copy code", 1500); } catch {}
@@ -267,7 +242,6 @@ function wireUi() {
     $("groupModal").classList.add("hidden");
     render();
   });
-
   $("leaveBtn").addEventListener("click", () => {
     if (!confirm("Stop sharing and clear your identity on this device?")) return;
     if (state.mode === "live") stopPublishing();
@@ -290,14 +264,12 @@ function updateModeBadge() {
   else { b.textContent = "Demo mode"; b.className = "badge demo"; }
 }
 
-/* Render */
 function render() {
   updateModeBadge();
   const ss = $("shareState");
   ss.textContent = state.sharing ? "\u25cf Sharing on" : "\u25cf Sharing paused";
   ss.className = "share-state " + (state.sharing ? "on" : "off");
   $("toggleShareBtn").textContent = state.sharing ? "Pause sharing" : "Resume sharing";
-
   const list = $("peopleList");
   const entries = Object.values(state.people);
   $("peopleCount").textContent = entries.length + (entries.length === 1 ? " person" : " people");
@@ -305,9 +277,7 @@ function render() {
   entries.sort((a, b) => (b.me ? 1 : 0) - (a.me ? 1 : 0)).forEach(p => {
     const li = document.createElement("li");
     const ago = p.ts ? Math.max(0, Math.round((Date.now() - p.ts) / 1000)) : null;
-    li.innerHTML = `<span class="dot" style="background:${p.me ? "#22c55e" : colorFor(p.uid)}"></span>
-      <span class="person-name">${esc(p.name || "?")}${p.me ? " (you)" : ""}</span>
-      <span class="person-meta">${ago == null ? "" : ago + "s ago"}</span>`;
+    li.innerHTML = `<span class="dot" style="background:${p.me ? "#22c55e" : colorFor(p.uid)}"></span><span class="person-name">${esc(p.name || "?")}${p.me ? " (you)" : ""}</span><span class="person-meta">${ago == null ? "" : ago + "s ago"}</span>`;
     li.addEventListener("click", () => { if (p.lat != null) state.map.setView([p.lat, p.lng], 16); });
     list.appendChild(li);
   });

@@ -6,7 +6,7 @@ A "Find My Friends"-style web app where **everyone opts in**. Your live location
 
 ## Live demo
 
-Runs in **demo mode** out of the box (your real GPS + a few simulated contacts on the map) so the live link works with zero setup. Enable real cross-device sharing by pasting your own free Firebase config (see below).
+Runs in **demo mode** out of the box (your real GPS + a few simulated contacts on the map) so the live link works with zero setup. Enable real cross-device sharing by pasting your own free Firebase config.
 
 ## Features
 
@@ -20,10 +20,10 @@ Runs in **demo mode** out of the box (your real GPS + a few simulated contacts o
 
 ## Enable real cross-device sharing (Firebase)
 
-1. Create a free project at [console.firebase.google.com](https://console.firebase.google.com/).
+1. Create a free project at console.firebase.google.com.
 2. Add a **Realtime Database** (start in test mode, or use the rules below).
-3. In Project settings -> your web app, copy the `firebaseConfig` object.
-4. In the app: **Settings -> paste the config -> Save & connect.**
+3. In Project settings, your web app, copy the `firebaseConfig` object.
+4. In the app: Settings, paste the config, Save & connect.
 
 Suggested Realtime Database rules (open group read/write; tighten with Auth for production):
 
@@ -32,10 +32,7 @@ Suggested Realtime Database rules (open group read/write; tighten with Auth for 
   "rules": {
     "groups": {
       "$group": {
-        "members": {
-          ".read": true,
-          ".write": true
-        }
+        "members": { ".read": true, ".write": true }
       }
     }
   }
@@ -50,10 +47,6 @@ python3 -m http.server 8080
 ```
 
 Geolocation requires HTTPS or `localhost` - GitHub Pages provides HTTPS automatically.
-
-## Tech
-
-Vanilla JS (ES modules), Leaflet, Firebase Realtime Database (optional). No build step.
 
 ## Privacy & ethics
 
