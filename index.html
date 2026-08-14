@@ -16,19 +16,14 @@
     <div class="gate-card">
       <div class="logo">📍 Nearby</div>
       <h1>Share your location — only with people you choose</h1>
-      <p class="lede">
-        Nearby is <strong>consent-based</strong>. You choose exactly who is in your group, and you can stop sharing in one tap. No hidden tracking, ever.
-      </p>
+      <p class="lede">Nearby is <strong>consent-based</strong>. You choose exactly who is in your group, and you can stop sharing in one tap. No hidden tracking, ever.</p>
       <ul class="consent-list">
         <li>✅ Your live location is shared <strong>only</strong> with members of a group you join.</li>
         <li>✅ Everyone in a group can see everyone else — sharing is mutual and transparent.</li>
         <li>✅ You can pause sharing or leave at any time.</li>
         <li>✅ Nothing is shared until you tap <em>Start sharing</em> below.</li>
       </ul>
-      <label class="checkbox">
-        <input type="checkbox" id="consentCheck" />
-        <span>I understand my live location will be shared with my group, and I consent to this.</span>
-      </label>
+      <label class="checkbox"><input type="checkbox" id="consentCheck" /><span>I understand my live location will be shared with my group, and I consent to this.</span></label>
       <input type="text" id="displayName" placeholder="Your display name (e.g. Alex)" maxlength="24" autocomplete="off" />
       <button id="enterBtn" class="btn primary" disabled>Start sharing →</button>
       <p class="fineprint">By continuing you agree this app is used only with the informed consent of everyone whose location is shared. Tracking a person without their knowledge is prohibited.</p>
@@ -58,13 +53,9 @@
       <div class="modal-head"><h2>Settings</h2><button id="closeSettings" class="icon-btn">✕</button></div>
       <h3>Live cross-device sharing</h3>
       <p class="muted">Paste your free Firebase project's <code>config</code> object below to enable real sharing between devices. Leave empty to stay in local demo mode. <a href="https://console.firebase.google.com/" target="_blank" rel="noopener">Get Firebase config →</a></p>
-      <textarea id="firebaseConfig" rows="9" placeholder='{&#10;  "apiKey": "...",&#10;  "authDomain": "your-app.firebaseapp.com",&#10;  "databaseURL": "https://your-app-default-rtdb.firebaseio.com",&#10;  "projectId": "your-app"&#10;}'></textarea>
-      <div class="modal-actions">
-        <button id="saveFirebase" class="btn primary">Save & connect</button>
-        <button id="clearFirebase" class="btn ghost">Use demo mode</button>
-      </div>
-      <hr />
-      <h3>Privacy</h3>
+      <textarea id="firebaseConfig" rows="9" placeholder='{"apiKey":"...","authDomain":"your-app.firebaseapp.com","databaseURL":"https://your-app-default-rtdb.firebaseio.com","projectId":"your-app"}'></textarea>
+      <div class="modal-actions"><button id="saveFirebase" class="btn primary">Save & connect</button><button id="clearFirebase" class="btn ghost">Use demo mode</button></div>
+      <hr /><h3>Privacy</h3>
       <button id="leaveBtn" class="btn danger-outline">Stop sharing & leave group</button>
       <p class="fineprint">This clears your identity and stops broadcasting your location.</p>
     </div>
@@ -73,14 +64,8 @@
     <div class="modal-card">
       <div class="modal-head"><h2>Your group</h2><button id="closeGroup" class="icon-btn">✕</button></div>
       <p class="muted">Share this code with people you trust. Anyone with the code can join and will be visible to the whole group.</p>
-      <div class="code-row">
-        <input type="text" id="groupCode" placeholder="Group code" maxlength="12" autocomplete="off" />
-        <button id="genCode" class="btn ghost" title="Generate a new code">🎲</button>
-      </div>
-      <div class="modal-actions">
-        <button id="joinGroup" class="btn primary">Join / create</button>
-        <button id="copyCode" class="btn ghost">Copy code</button>
-      </div>
+      <div class="code-row"><input type="text" id="groupCode" placeholder="Group code" maxlength="12" autocomplete="off" /><button id="genCode" class="btn ghost" title="Generate a new code">🎲</button></div>
+      <div class="modal-actions"><button id="joinGroup" class="btn primary">Join / create</button><button id="copyCode" class="btn ghost">Copy code</button></div>
     </div>
   </div>
 </div>
