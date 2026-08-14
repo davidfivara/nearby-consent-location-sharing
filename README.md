@@ -6,7 +6,7 @@ A "Find My Friends"-style web app where **everyone opts in**. Your live location
 
 ## Live demo
 
-Runs in **demo mode** out of the box (your real GPS + a few simulated contacts on the map) so the live link works with zero setup. Enable real cross-device sharing by pasting your own free Firebase config (see below).
+Runs in **demo mode** out of the box (your real GPS + a few simulated contacts on the map) so the live link works with zero setup. Enable real cross-device sharing by pasting your own free Firebase config.
 
 ## Features
 
@@ -42,7 +42,7 @@ python3 -m http.server 8080
 # then open http://localhost:8080
 ```
 
-Geolocation requires HTTPS or localhost - GitHub Pages provides HTTPS automatically.
+Geolocation requires HTTPS or `localhost` - GitHub Pages provides HTTPS automatically.
 
 ## Privacy & ethics
 

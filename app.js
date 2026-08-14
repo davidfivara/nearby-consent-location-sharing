@@ -9,15 +9,8 @@ const state = {
   uid: localStorage.getItem(LS.uid) || cryptoId(),
   name: localStorage.getItem(LS.name) || "",
   group: localStorage.getItem(LS.group) || "",
-  sharing: true,
-  mode: "demo",
-  map: null,
-  markers: {},
-  people: {},
-  watchId: null,
-  demoTimer: null,
-  fb: null,
-  myPos: null,
+  sharing: true, mode: "demo", map: null, markers: {}, people: {},
+  watchId: null, demoTimer: null, fb: null, myPos: null,
 };
 localStorage.setItem(LS.uid, state.uid);
 
@@ -34,32 +27,26 @@ enterBtn.addEventListener("click", () => {
   state.name = displayName.value.trim();
   localStorage.setItem(LS.name, state.name);
   localStorage.setItem(LS.consent, "1");
-  $("gate").classList.add("hidden");
-  $("main").classList.remove("hidden");
-  boot();
+  $("gate").classList.add("hidden"); $("main").classList.remove("hidden"); boot();
 });
 if (localStorage.getItem(LS.consent) === "1" && state.name) {
-  $("gate").classList.add("hidden");
-  $("main").classList.remove("hidden");
+  $("gate").classList.add("hidden"); $("main").classList.remove("hidden");
   window.addEventListener("DOMContentLoaded", boot);
 }
 
 function boot() {
-  initMap();
-  loadFirebaseFromStorage();
+  initMap(); loadFirebaseFromStorage();
   if (!state.group) state.group = randomCode();
   localStorage.setItem(LS.group, state.group);
-  $("groupCode").value = state.group;
-  updateGroupPill();
+  $("groupCode").value = state.group; updateGroupPill();
   startGeolocation();
   if (state.mode === "demo") startDemo();
-  wireUi();
-  render();
+  wireUi(); render();
 }
 
 function initMap() {
   state.map = L.map("map", { zoomControl: true }).setView([6.5244, 3.3792], 13);
-  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19, attribution: "(c) OpenStreetMap contributors" }).addTo(state.map);
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19, attribution: "&copy; OpenStreetMap contributors" }).addTo(state.map);
 }
 
 function startGeolocation() {
@@ -83,8 +70,7 @@ function upsertPerson(p) { state.people[p.uid] = { ...state.people[p.uid], ...p 
 function removePerson(uid) { if (state.markers[uid]) { state.map.removeLayer(state.markers[uid]); delete state.markers[uid]; } delete state.people[uid]; render(); }
 function colorFor(uid) { let h = 0; for (const c of uid) h = (h * 31 + c.charCodeAt(0)) % 360; return `hsl(${h} 70% 55%)`; }
 function drawMarker(uid) {
-  const p = state.people[uid];
-  if (!p || p.lat == null) return;
+  const p = state.people[uid]; if (!p || p.lat == null) return;
   const isMe = p.me;
   const html = `<div class="marker-label ${isMe ? "marker-me" : ""}">${esc(p.name || "?")}${isMe ? " (you)" : ""}</div>`;
   const icon = L.divIcon({ className: "", html, iconSize: [10, 10], iconAnchor: [10, 24] });
@@ -100,11 +86,8 @@ const DEMO = [
 function startDemo() {
   DEMO.forEach(d => upsertPerson({ ...d, ts: Date.now() }));
   state.demoTimer = setInterval(() => {
-    DEMO.forEach(d => {
-      const p = state.people[d.uid]; if (!p) return;
-      p.lat += (Math.random() - 0.5) * 0.0009; p.lng += (Math.random() - 0.5) * 0.0009; p.ts = Date.now();
-      upsertPerson(p);
-    });
+    DEMO.forEach(d => { const p = state.people[d.uid]; if (!p) return;
+      p.lat += (Math.random() - 0.5) * 0.0009; p.lng += (Math.random() - 0.5) * 0.0009; p.ts = Date.now(); upsertPerson(p); });
   }, 3000);
 }
 function stopDemo() { if (state.demoTimer) { clearInterval(state.demoTimer); state.demoTimer = null; } DEMO.forEach(d => removePerson(d.uid)); }
@@ -112,45 +95,36 @@ function stopDemo() { if (state.demoTimer) { clearInterval(state.demoTimer); sta
 async function loadFirebaseFromStorage() {
   const raw = localStorage.getItem(LS.fb);
   if (!raw) { state.mode = "demo"; return; }
-  try { await connectFirebase(JSON.parse(raw)); } catch (e) { console.warn("Firebase config invalid, demo mode", e); state.mode = "demo"; }
+  try { await connectFirebase(JSON.parse(raw)); }
+  catch (e) { console.warn("Firebase config invalid, staying in demo mode", e); state.mode = "demo"; }
 }
 async function connectFirebase(cfg) {
   const appMod = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js");
   const dbMod = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js");
   const app = appMod.initializeApp(cfg, "nearby-" + Date.now());
   const db = dbMod.getDatabase(app);
-  state.fb = { app, db, mod: dbMod };
-  state.mode = "live";
+  state.fb = { app, db, mod: dbMod }; state.mode = "live";
   stopDemo(); subscribeGroup(); publishMyPosition(); updateModeBadge();
 }
 function groupPath() { return `groups/${state.group}/members`; }
 function subscribeGroup() {
-  if (!state.fb) return;
-  const { db, mod } = state.fb;
+  if (!state.fb) return; const { db, mod } = state.fb;
   Object.keys(state.people).forEach(uid => { if (uid !== state.uid) removePerson(uid); });
   const r = mod.ref(db, groupPath());
   mod.onValue(r, (snap) => {
     const val = snap.val() || {}; const seen = new Set();
-    Object.entries(val).forEach(([uid, m]) => {
-      if (!m || m.lat == null) return;
-      seen.add(uid);
-      upsertPerson({ uid, name: m.name, lat: m.lat, lng: m.lng, ts: m.ts, me: uid === state.uid });
-    });
+    Object.entries(val).forEach(([uid, m]) => { if (!m || m.lat == null) return; seen.add(uid);
+      upsertPerson({ uid, name: m.name, lat: m.lat, lng: m.lng, ts: m.ts, me: uid === state.uid }); });
     Object.keys(state.people).forEach(uid => { if (uid !== state.uid && !seen.has(uid) && !uid.startsWith("demo_")) removePerson(uid); });
   });
 }
 function publishMyPosition() {
   if (state.mode !== "live" || !state.fb || !state.myPos || !state.sharing) return;
-  const { db, mod } = state.fb;
-  const r = mod.ref(db, `${groupPath()}/${state.uid}`);
+  const { db, mod } = state.fb; const r = mod.ref(db, `${groupPath()}/${state.uid}`);
   mod.set(r, { name: state.name, lat: state.myPos.lat, lng: state.myPos.lng, ts: Date.now() });
   mod.onDisconnect(r).remove();
 }
-function stopPublishing() {
-  if (state.mode !== "live" || !state.fb) return;
-  const { db, mod } = state.fb;
-  mod.remove(mod.ref(db, `${groupPath()}/${state.uid}`));
-}
+function stopPublishing() { if (state.mode !== "live" || !state.fb) return; const { db, mod } = state.fb; mod.remove(mod.ref(db, `${groupPath()}/${state.uid}`)); }
 
 function wireUi() {
   $("settingsBtn").addEventListener("click", () => $("settingsModal").classList.remove("hidden"));
@@ -164,7 +138,7 @@ function wireUi() {
     const raw = $("firebaseConfig").value.trim();
     if (!raw) { alert("Paste your Firebase config, or tap 'Use demo mode'."); return; }
     let cfg; try { cfg = JSON.parse(raw); } catch { alert("That doesn't look like valid JSON. Copy the config object exactly."); return; }
-    if (!cfg.databaseURL) { alert("Config needs a databaseURL (Realtime Database). Enable Realtime Database in Firebase."); return; }
+    if (!cfg.databaseURL) { alert("Config needs a databaseURL (Realtime Database)."); return; }
     localStorage.setItem(LS.fb, JSON.stringify(cfg));
     try { await connectFirebase(cfg); $("settingsModal").classList.add("hidden"); alert("Connected! You're now sharing live with your group."); }
     catch (e) { alert("Could not connect: " + e.message); }
